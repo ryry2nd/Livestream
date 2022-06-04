@@ -4,19 +4,21 @@ import cv2
 
 #init vars
 camera = cv2.VideoCapture(0)
+camera.set(cv2.CAP_PROP_FPS, 10)
+fps = int(camera.get(5))
 app = Flask('app')
 
 #generates the camera frames
 def gen_frames():  
     while True:
         success, frame = camera.read()  # read the camera frame
-        if not success:
-            break
-        else:
-            ret, buffer = cv2.imencode('.jpg', frame)
+        if success:
+            ret, buffer = cv2.imencode('.jpg', cv2.resize(frame, (16, 16)))
             frame = buffer.tobytes()
             yield (b'--frame\r\n'
                     b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')  # concat frame one by one and show result
+            
+            k = cv2.waitKey(1)
 
 #the video feed
 @app.route('/video_feed')
