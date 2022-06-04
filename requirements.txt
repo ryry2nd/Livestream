@@ -1,3 +1,5 @@
 python (duh)
 html (what kind of website doesnt use html)
 flask
+numpy
+opencv-python
