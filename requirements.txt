@@ -1,2 +1,3 @@
 python (duh)
+html (what kind of website doesnt use html)
 flask
