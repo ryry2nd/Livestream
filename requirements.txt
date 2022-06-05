@@ -1,5 +1,6 @@
 python (duh)
 html (what kind of website doesnt use html)
 flask
+waitress
 numpy
 opencv-python

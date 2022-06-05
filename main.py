@@ -1,5 +1,6 @@
 #imports
 from flask import Flask, Response, render_template
+from waitress import serve
 import cv2, time
 
 #init vars
@@ -33,7 +34,7 @@ def index():
 
 #main function
 def main():
-    app.run(host='0.0.0.0', port=8080)
+    serve(app, host='0.0.0.0', port=8080, threads=4)
 
 #runs if it is not being imported
 if __name__ == '__main__':
