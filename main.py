@@ -4,7 +4,14 @@ from waitress import serve
 import cv2, time
 
 #init vars
-FPS = 30
+FPS = 60
+COMPRESSION = 18
+SIZE = (256, 256)
+THREADS = 6
+PORT = 8080
+HOST = '0.0.0.0'
+
+ENCODE_PARAM = [int(cv2.IMWRITE_JPEG_QUALITY), COMPRESSION]
 camera = cv2.VideoCapture(0)
 app = Flask('app')
 
@@ -14,8 +21,7 @@ def gen_frames():
     while True:
         success, frame = camera.read()  # read the camera frame
         if success:
-            encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 30]
-            ret, buffer = cv2.imencode('.jpg', cv2.resize(frame, (256, 256)), encode_param)
+            ret, buffer = cv2.imencode('.jpg', cv2.resize(frame, SIZE), ENCODE_PARAM)
             yield(b'--frame\r\n'b'Content-Type:image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
 
             sleepTime = 1./FPS - (time.time() - lastFrameTime)
@@ -35,7 +41,8 @@ def index():
 
 #main function
 def main():
-    serve(app, host='0.0.0.0', port=8080, threads=6)
+    print("Livestream started!")
+    serve(app, host=HOST, port=PORT, threads=THREADS)
 
 #runs if it is not being imported
 if __name__ == '__main__':
