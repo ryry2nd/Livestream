@@ -1,5 +1,5 @@
 #imports
-from flask import Flask, Response
+from flask import Flask, Response, render_template
 import cv2, time
 
 #init vars
@@ -8,7 +8,7 @@ camera = cv2.VideoCapture(0)
 app = Flask('app')
 
 #generates the camera frames
-def gen_frames():  
+def gen_frames():
     lastFrameTime = time.time()
     while True:
         success, frame = camera.read()  # read the camera frame
@@ -22,9 +22,14 @@ def gen_frames():
             lastFrameTime = time.time()
 
 #the video feed
-@app.route('/')
+@app.route('/video_feed')
 def video_feed():
     return Response(gen_frames(), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+#root
+@app.route('/')
+def index():
+    return render_template('index.html')
 
 #main function
 def main():
