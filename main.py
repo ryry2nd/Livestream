@@ -14,7 +14,8 @@ def gen_frames():
     while True:
         success, frame = camera.read()  # read the camera frame
         if success:
-            ret, buffer = cv2.imencode('.jpg', cv2.resize(frame, (64, 64)))
+            encode_param = [int(cv2.IMWRITE_JPEG_QUALITY), 30]
+            ret, buffer = cv2.imencode('.jpg', cv2.resize(frame, (256, 256)), encode_param)
             yield(b'--frame\r\n'b'Content-Type:image/jpeg\r\n\r\n' + buffer.tobytes() + b'\r\n')
 
             sleepTime = 1./FPS - (time.time() - lastFrameTime)
@@ -34,7 +35,7 @@ def index():
 
 #main function
 def main():
-    serve(app, host='0.0.0.0', port=8080, threads=4)
+    serve(app, host='0.0.0.0', port=8080, threads=6)
 
 #runs if it is not being imported
 if __name__ == '__main__':
